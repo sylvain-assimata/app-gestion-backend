@@ -1,10 +1,12 @@
 FROM php:8.2-cli
 
-# Dépendances système + extensions PHP nécessaires à Laravel (SQLite pour le test,
-# mbstring/zip requis par le framework et Composer)
+# Dépendances système + extensions PHP nécessaires à Laravel et aux packages
+# utilisés (dompdf et maatwebsite/excel ont besoin de gd, intl, bcmath)
 RUN apt-get update && apt-get install -y \
         git unzip libzip-dev libsqlite3-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_sqlite mbstring zip \
+        libpng-dev libjpeg-dev libfreetype6-dev libicu-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_sqlite mbstring zip gd intl bcmath \
     && rm -rf /var/lib/apt/lists/*
 
 # Composer
